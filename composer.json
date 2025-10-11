@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^6.11",
+        "pragmarx/google2fa": "^9.0",
+        "endroid/qr-code": "^6.0"
+    }
+}
