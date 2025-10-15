@@ -4,25 +4,33 @@ require_once 'includes/functions.php';
 require_once 'config/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = sanitizeInput($_POST['email']);
+    $login = sanitizeInput($_POST['login']);
     $password = $_POST['password'];
     
-    if (empty($email) || empty($password)) {
+    if (empty($login) || empty($password)) {
         setFlashMessage('error', 'Please fill in all fields');
     } else {
         $database = new Database();
         $db = $database->getConnection();
         
-        $query = "SELECT id, username, email, password, is_verified FROM users WHERE email = ? OR username = ?";
+        $query = "SELECT id, username, email, password, is_verified, is_admin, is_banned FROM users WHERE email = ? OR username = ?";
         $stmt = $db->prepare($query);
-        $stmt->execute([$email, $email]);
+        $stmt->execute([$login, $login]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($user && password_verify($password, $user['password'])) {
-            if ($user['is_verified']) {
+            if ($user['is_banned']) {
+                setFlashMessage('error', 'Your account has been suspended.');
+            } elseif ($user['is_verified']) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                header('Location: dashboard.php');
+                $_SESSION['is_admin'] = $user['is_admin'];
+
+                if ($user['is_admin']) {
+                    header('Location: admin-panel.php');
+                } else {
+                    header('Location: dashboard.php');
+                }
                 exit();
             } else {
                 setFlashMessage('error', 'Please verify your email first');
@@ -59,8 +67,8 @@ $flash = getFlashMessage();
 
         <form method="POST" action="">
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <label for="login">Email or Username</label>
+                <input type="text" id="login" name="login" class="form-control" required>
             </div>
 
             <div class="form-group">

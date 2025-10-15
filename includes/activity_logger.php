@@ -15,7 +15,7 @@ class ActivityLogger {
                   VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
         
-        $detailsJson = $details ? json_encode($details) : null;
+        $detailsJson = $details ? json_encode($details, JSON_INVALID_UTF8_SUBSTITUTE) : null;
         return $stmt->execute([$userId, $action, $ip, $userAgent, $detailsJson]);
     }
     

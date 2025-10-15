@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($action) {
         case 'resend_otp':
             if (!isset($_SESSION['verify_user_id'])) {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
+                echo json_encode(['success' => false, 'message' => 'Invalid session'], JSON_INVALID_UTF8_SUBSTITUTE);
                 exit();
             }
             
@@ -40,20 +40,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute([$_SESSION['verify_user_id'], $otp, $expires_at]);
                 
                 if (sendOTPEmail($user['email'], $otp, $user['username'])) {
-                    echo json_encode(['success' => true, 'message' => 'New OTP sent']);
+                    echo json_encode(['success' => true, 'message' => 'New OTP sent'], JSON_INVALID_UTF8_SUBSTITUTE);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Failed to send OTP']);
+                    echo json_encode(['success' => false, 'message' => 'Failed to send OTP'], JSON_INVALID_UTF8_SUBSTITUTE);
                 }
             } else {
-                echo json_encode(['success' => false, 'message' => 'User not found']);
+                echo json_encode(['success' => false, 'message' => 'User not found'], JSON_INVALID_UTF8_SUBSTITUTE);
             }
             break;
             
         default:
-            echo json_encode(['success' => false, 'message' => 'Invalid action']);
+            echo json_encode(['success' => false, 'message' => 'Invalid action'], JSON_INVALID_UTF8_SUBSTITUTE);
             break;
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method'], JSON_INVALID_UTF8_SUBSTITUTE);
 }
 ?>

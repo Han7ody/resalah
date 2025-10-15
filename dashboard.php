@@ -204,6 +204,11 @@ $flash = getFlashMessage();
             background: #dc3545;
             color: white;
         }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
         
         .btn-small:hover {
             transform: translateY(-1px);
@@ -309,6 +314,8 @@ $flash = getFlashMessage();
                     </div>
                     
                     <div class="security-actions">
+                        <a href="messaging.php" class="btn-small btn-success" style="text-decoration: none;">Open Messenger</a>
+                        <a href="blocked-users.php" class="btn-small btn-info" style="text-decoration: none;">Blocked Users</a>
                         <button onclick="openModal('changePasswordModal')" class="btn-small btn-warning">
                             Change Password
                         </button>
